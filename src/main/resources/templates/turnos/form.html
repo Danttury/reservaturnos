@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Asignar Nuevo Turno</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Clínica Odontológica</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/turnos">Turnos</a>
+                </li>
+                <!-- Elementos visibles solo para ADMIN -->
+                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Pacientes
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/pacientes">Listar Pacientes</a>
+                        <a class="dropdown-item" href="/pacientes/nuevo">Registrar Paciente</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOdontologos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Odontólogos
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownOdontologos">
+                        <a class="dropdown-item" href="/odontologos">Listar Odontólogos</a>
+                        <a class="dropdown-item" href="/odontologos/nuevo">Registrar Odontólogo</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <!-- Botón de Logout -->
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal: Formulario para Asignar Nuevo Turno -->
+    <div class="mt-4">
+        <h2>Asignar Nuevo Turno</h2>
+        <form th:action="@{/turnos}" th:object="${turno}" method="post">
+            <div class="form-group">
+                <label for="paciente">Paciente</label>
+                <select class="form-control" id="paciente" th:field="*{paciente.id}" required>
+                    <option th:each="paciente : ${pacientes}"
+                            th:value="${paciente.id}"
+                            th:text="${paciente.nombre} + ' ' + ${paciente.apellido}">Seleccionar Paciente</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="odontologo">Odontólogo</label>
+                <select class="form-control" id="odontologo" th:field="*{odontologo.id}" required>
+                    <option th:each="odontologo : ${odontologos}"
+                            th:value="${odontologo.id}"
+                            th:text="${odontologo.nombre} + ' ' + ${odontologo.apellido}">Seleccionar Odontólogo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fechaHora">Fecha y Hora</label>
+                <input type="datetime-local" class="form-control" id="fechaHora" th:field="*{fechaHora}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Asignar Turno</button>
+            <a th:href="@{/turnos}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts de Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
